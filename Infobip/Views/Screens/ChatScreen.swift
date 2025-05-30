@@ -21,6 +21,11 @@ struct ChatScreen: View {
                 viewModel.sendImage(image)
             }
         }
+        .fullScreenCover(isPresented: $viewModel.showCamera) {
+            CameraPicker { image in
+                viewModel.sendImage(image)
+            }
+        }
         .alert(isPresented: $viewModel.showAlert, content: {
             Alert(
                 title: Text("Error"),
@@ -28,15 +33,12 @@ struct ChatScreen: View {
                 dismissButton: .default(Text("OK"))
             )
         })
-        .onChange(of: viewModel.chatState) { newState in
-            print("Chat state changed to: \(String(describing: newState))")
-        }
-        .navigationBarHidden(true)
     }
 
     @ViewBuilder func makeChat() -> some View {
         let chatView = ChatViewRepresentable(shouldUseCustomChatInput: true, chatState: $viewModel.chatState)
         chatView
+            .navigationBarBackButtonHidden(true)
             .onAppear {
                 viewModel.chatController = chatView.chatController
             }
@@ -50,6 +52,8 @@ struct ChatScreen: View {
                 viewModel.sendText(text)
             }, onAttachmentDidTap: {
                 viewModel.showImagePicker = true
+            }, onCameraDidTap: {
+                viewModel.showCamera = true
             })
         }
     }

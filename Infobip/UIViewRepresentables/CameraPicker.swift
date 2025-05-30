@@ -10,8 +10,8 @@ import UIKit
 
 struct CameraPicker: UIViewControllerRepresentable {
     @Environment(\.dismiss) var dismiss
-    @Binding var image: UIImage?
-    
+    var didFinishTakingPhoto: ((UIImage) -> Void)?
+
     func makeUIViewController(context: Context) -> some UIViewController {
         let picker = UIImagePickerController()
         
@@ -20,28 +20,28 @@ struct CameraPicker: UIViewControllerRepresentable {
         
         return picker
     }
-    
+
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
-    
+
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
-    
+
     class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
         let parent: CameraPicker
-        
+
         init(_ parent: CameraPicker) {
             self.parent = parent
         }
-        
+
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let uiImage = info[.originalImage] as? UIImage {
-                parent.image = uiImage
+                parent.didFinishTakingPhoto?(uiImage)
             }
             
             parent.dismiss()
         }
-        
+
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             parent.dismiss()
         }

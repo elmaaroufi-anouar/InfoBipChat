@@ -25,25 +25,21 @@ struct TextEditorView: View {
     @FocusState.Binding var isFocusedInput: Bool
     var fixedHorizontal: Bool = false
     var fixedVertical: Bool = true
-    
+
     // These control the sizing
     private let maxHeight: CGFloat = 120
     private let minHeight: CGFloat = 36
 
     var body: some View {
-        UITextView.appearance().backgroundColor = .clear
-        
-        return VStack {
+        VStack {
             Text(text)
                 .frame(maxWidth: .infinity, maxHeight: maxHeight)
                 .hidden()
                 .overlay {
                     TextEditor(text: $text)
-//                        .padding(.horizontal, -5.0)
-//                        .padding(.vertical, -8.0)
-//                        .padding(.horizontal, 7)
                         .focused($isFocusedInput)
                         .font(.Done.regular(size: 18))
+                        .foregroundStyle(Color.black)
                         .frame(minHeight: minHeight, maxHeight: maxHeight)
                         .transparentScrolling()
                         
@@ -63,7 +59,8 @@ struct InputToolBar: View {
 
     var onSendDidTap: (String) -> Void
     var onAttachmentDidTap: () -> Void
-    
+    var onCameraDidTap: () -> Void
+
     var body: some View {
         HStack(spacing: 15) {
             HStack {
@@ -115,26 +112,16 @@ struct InputToolBar: View {
             , alignment: .top
         )
         .confirmationDialog("Show Image Source", isPresented: $showActionSheet) {
-            if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                Button ("Take Photo") {
-                    showCamera = true
-                }
+            Button ("Take Photo") {
+                onCameraDidTap()
             }
 
             Button("Choose from Library") {
-//                showPhotoLibrary = true
                 onAttachmentDidTap()
             }
 
             Button("Cancel", role: .cancel) {}
         }
-        .sheet(isPresented: $showCamera) {
-            CameraPicker(image: $selectedImage)
-        }
         .background(.white)
     }
 }
-
-//#Preview {
-//    InputToolBar(onSendDidTap: {_ in }, onAttachmentDidTap: {})
-//}

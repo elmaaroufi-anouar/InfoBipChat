@@ -10,11 +10,16 @@ import InAppChat
 
 class ChatViewModel: ObservableObject {
     @Published var text: String = ""
-    @Published var showImagePicker: Bool = false
 
+    // media state
+    @Published var showImagePicker: Bool = false
+    @Published var showCamera: Bool = false
+
+    // for alert
     @Published var showAlert: Bool = false
     @Published var errorText: String = ""
 
+    // for chat state
     @Published var chatState: MMChatWebViewState? = .unknown
     var chatController: MMChatViewController?
 

@@ -16,7 +16,7 @@ struct ChatTopBar: View {
                 dismiss()
             }) {
                 Image(systemName: "xmark")
-                    .foregroundColor(.primary)
+                    .foregroundColor(.black)
                     .font(.system(size: 22, weight: .semibold))
                     .frame(width: 36, height: 36)
             }
@@ -30,17 +30,17 @@ struct ChatTopBar: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Done")
                     .font(.Done.bold(size: 18))
-                    .foregroundColor(.primary)
+                    .foregroundColor(.black)
                 Text("Support")
                     .font(.Done.regular(size: 16))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.black)
             }
             Spacer()
         }
         .padding(.horizontal, 24)
         .padding(.top, 20)
         .padding(.bottom, 12)
-        .background(Color(.systemBackground))
+        .background(Color.white)
         .shadow(color: Color.black.opacity(0.05), radius: 2, y: 2)
     }
 }

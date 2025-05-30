@@ -10,7 +10,7 @@ import SwiftUI
 struct ImagePickerRepresentable: UIViewControllerRepresentable {
     @Binding var isPresenting: Bool
     var didFinishPickingWithImage: ((UIImage) -> Void)?
-
+    
     class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
         let parent: ImagePickerRepresentable
         init(_ parent: ImagePickerRepresentable) {

@@ -23,9 +23,10 @@ struct ChatViewRepresentable: UIViewControllerRepresentable {
     }
 
     func makeUIViewController(context: Context) -> MMChatViewController {
+        MMChatSettings.sharedInstance.shouldSetNavBarAppearance = false
         MMChatSettings.sharedInstance.shouldHandleKeyboardAppearance = false
         MMChatSettings.sharedInstance.shouldUseExternalChatInput = shouldUseCustomChatInput
-        
+
         // set widget theme
         chatController.setWidgetTheme("Done") { error in
             print(">>>>Theme changed with: " + (error?.localizedDescription ?? "Success"))
@@ -34,7 +35,7 @@ struct ChatViewRepresentable: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: MMChatViewController, context: Context) { }
-    
+
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
