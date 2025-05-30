@@ -1,0 +1,42 @@
+{
+  "originHash" : "378ba47e23b5a518f388d98b546444f0c3f52abbdf059c8c182034e496ab2c61",
+  "pins" : [
+    {
+      "identity" : "cocoalumberjack",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CocoaLumberjack/CocoaLumberjack.git",
+      "state" : {
+        "revision" : "4b8714a7fb84d42393314ce897127b3939885ec3",
+        "version" : "3.8.5"
+      }
+    },
+    {
+      "identity" : "infobip-rtc-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/infobip/infobip-rtc-ios.git",
+      "state" : {
+        "revision" : "3e2366a2a714e9c7818f0442e0011daa23964712",
+        "version" : "2.5.4"
+      }
+    },
+    {
+      "identity" : "mobile-messaging-sdk-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/infobip/mobile-messaging-sdk-ios.git",
+      "state" : {
+        "revision" : "4a02a334cc157a50efce5cdd3e4782cc91261f14",
+        "version" : "13.4.0"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log",
+      "state" : {
+        "revision" : "3d8596ed08bd13520157f0355e35caed215ffbfa",
+        "version" : "1.6.3"
+      }
+    }
+  ],
+  "version" : 3
+}
