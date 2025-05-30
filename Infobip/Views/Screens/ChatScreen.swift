@@ -16,6 +16,8 @@ struct ChatScreen: View {
             makeChat()
             makeChatInput()
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.white)
         .sheet(isPresented: $viewModel.showImagePicker) {
             ImagePickerRepresentable(isPresenting: $viewModel.showImagePicker) { image in
                 viewModel.sendImage(image)
