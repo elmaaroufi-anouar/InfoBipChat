@@ -18,6 +18,16 @@ extension View {
             }
         }
     }
+    
+    func neverDismissKeyboardOnScroll() -> some View {
+        if #available(iOS 16.0, *) {
+            return scrollDismissesKeyboard(.never)
+        } else {
+            return onAppear {
+                UIScrollView.appearance().keyboardDismissMode = .none
+            }
+        }
+    }
 }
 
 struct TextEditorView: View {
@@ -28,12 +38,12 @@ struct TextEditorView: View {
 
     // These control the sizing
     private let maxHeight: CGFloat = 120
-    private let minHeight: CGFloat = 36
-
+    private let minHeight: CGFloat = 40
+    
     var body: some View {
         VStack {
             Text(text)
-                .frame(maxWidth: .infinity, maxHeight: maxHeight)
+                .frame(maxWidth: .infinity, minHeight: minHeight, maxHeight: maxHeight)
                 .hidden()
                 .overlay {
                     TextEditor(text: $text)
@@ -42,8 +52,10 @@ struct TextEditorView: View {
                         .foregroundStyle(Color.black)
                         .frame(minHeight: minHeight, maxHeight: maxHeight)
                         .transparentScrolling()
+                        .neverDismissKeyboardOnScroll()
                         
                 }
+                .clipped()
                 .fixedSize(horizontal: fixedHorizontal, vertical: fixedVertical)
         }
     }
@@ -54,16 +66,14 @@ struct InputToolBar: View {
     @FocusState private var isInputFocused: Bool
     @State private var selectedImage: UIImage?
     @State private var showActionSheet = false
-    @State private var showCamera = false
-    @State private var showPhotoLibrary = false
 
     var onSendDidTap: (String) -> Void
     var onAttachmentDidTap: () -> Void
     var onCameraDidTap: () -> Void
 
     var body: some View {
-        HStack(spacing: 15) {
-            HStack {
+        HStack(spacing: text.isEmpty ? 15 : 0) {
+            HStack (alignment: .bottom){
                 TextEditorView(text: $text, isFocusedInput: $isInputFocused)
 
                 Button {
@@ -75,6 +85,8 @@ struct InputToolBar: View {
                         .scaledToFill()
                         .frame(width: 40, height: 40)
                 }
+                .opacity(text.isEmpty ? 0 : 1)
+                .disabled(text.isEmpty)
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
@@ -84,25 +96,38 @@ struct InputToolBar: View {
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(Color(hex: isInputFocused ? 0xDDDDDD : 0xF4F4F4), lineWidth: 1)
             )
-
-            Button {
-                showActionSheet = true
-            } label: {
-                Image("camera_icon")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 30, height: 30)
+            .animation(.default, value: text.isEmpty)
+            .onTapGesture {
+                isInputFocused = true
             }
 
-            // Audio input
-            Button {
-                // Send an audio
-            } label: {
-                Image("voice_icon")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 30, height: 30)
+            // camera and audio buttons
+            HStack {
+                if (text.isEmpty)
+                {
+                    Button {
+                        showActionSheet = true
+                    } label: {
+                        Image("camera_icon")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 30, height: 30)
+                    }
+                    
+                    // Audio input will be added later
+                    /*
+                    Button {
+                        // Send an audio
+                    } label: {
+                        Image("voice_icon")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 30, height: 30)
+                    }
+                     */
+                }
             }
+            .animation(.default, value: text.isEmpty)
         }
         .padding()
         .overlay(
