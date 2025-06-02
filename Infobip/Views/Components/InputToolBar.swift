@@ -8,62 +8,9 @@
 import SwiftUI
 import PhotosUI
 
-extension View {
-    func transparentScrolling() -> some View {
-        if #available(iOS 16.0, *) {
-            return scrollContentBackground(.hidden)
-        } else {
-            return onAppear {
-                UITextView.appearance().backgroundColor = .clear
-            }
-        }
-    }
-    
-    func neverDismissKeyboardOnScroll() -> some View {
-        if #available(iOS 16.0, *) {
-            return scrollDismissesKeyboard(.never)
-        } else {
-            return onAppear {
-                UIScrollView.appearance().keyboardDismissMode = .none
-            }
-        }
-    }
-}
-
-struct TextEditorView: View {
-    @Binding var text: String
-    @FocusState.Binding var isFocusedInput: Bool
-    var fixedHorizontal: Bool = false
-    var fixedVertical: Bool = true
-
-    // These control the sizing
-    private let maxHeight: CGFloat = 120
-    private let minHeight: CGFloat = 40
-    
-    var body: some View {
-        VStack {
-            Text(text)
-                .frame(maxWidth: .infinity, minHeight: minHeight, maxHeight: maxHeight)
-                .hidden()
-                .overlay {
-                    TextEditor(text: $text)
-                        .focused($isFocusedInput)
-                        .font(.Done.regular(size: 18))
-                        .foregroundStyle(Color.black)
-                        .frame(minHeight: minHeight, maxHeight: maxHeight)
-                        .transparentScrolling()
-                        .neverDismissKeyboardOnScroll()
-                        
-                }
-                .clipped()
-                .fixedSize(horizontal: fixedHorizontal, vertical: fixedVertical)
-        }
-    }
-}
-
 struct InputToolBar: View {
     @Binding var text: String
-    @FocusState private var isInputFocused: Bool
+    @State private var isInputFocused: Bool = false
     @State private var selectedImage: UIImage?
     @State private var showActionSheet = false
 
@@ -71,11 +18,14 @@ struct InputToolBar: View {
     var onAttachmentDidTap: () -> Void
     var onCameraDidTap: () -> Void
 
+    @State private var height: CGFloat = 40
+
     var body: some View {
         HStack(spacing: text.isEmpty ? 15 : 0) {
             HStack (alignment: .bottom){
-                TextEditorView(text: $text, isFocusedInput: $isInputFocused)
-
+                DynamicTextEditor(text: $text, dynamicHeight: $height, isFocused: $isInputFocused)
+                    .frame(height: height)
+                
                 Button {
                     onSendDidTap(text)
                     text = ""
